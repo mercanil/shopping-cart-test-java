@@ -2,6 +2,8 @@ plugins {
     java
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
+    id("jacoco")
+
 }
 
 group = "com.siriusxm.example.cart"
