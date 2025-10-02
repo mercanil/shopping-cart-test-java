@@ -6,6 +6,13 @@ plugins {
     id("org.sonarqube") version "6.3.1.5724"
 }
 
+sonar {
+    properties {
+        property("sonar.projectKey", "mercanil_shopping-cart-test-java")
+        property("sonar.organization", "mercanil")
+    }
+}
+
 group = "com.siriusxm.example.cart"
 version = "0.1.0-SNAPSHOT"
 
