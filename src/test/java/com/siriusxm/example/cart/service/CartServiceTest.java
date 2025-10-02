@@ -1,11 +1,14 @@
-package com.siriusxm.example.cart;
+package com.siriusxm.example.cart.service;
 
-import com.siriusxm.example.cart.model.*;
-import com.siriusxm.example.cart.service.CartService;
+import com.siriusxm.example.cart.model.Cart;
+import com.siriusxm.example.cart.model.CartItem;
+import com.siriusxm.example.cart.model.CartTotals;
+import com.siriusxm.example.cart.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CartServiceTest {
 
