@@ -3,7 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("jacoco")
-
+    id("org.sonarqube") version "6.3.1.5724"
 }
 
 group = "com.siriusxm.example.cart"
@@ -20,19 +20,24 @@ repositories {
 }
 
 dependencies {
-    // Minimal Spring Boot - just for DI and testing
     implementation("org.springframework.boot:spring-boot-starter")
 
-    // JSON parsing
     implementation("com.google.code.gson:gson:2.10.1")
 
-    // Functional programming
     implementation("io.vavr:vavr:0.10.4")
 
-    // Testing with Spring
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+
+tasks.withType<JacocoReport> {
+    dependsOn(tasks.withType<Test>())
+
+    reports {
+        xml.required.set(true)
+    }
 }
