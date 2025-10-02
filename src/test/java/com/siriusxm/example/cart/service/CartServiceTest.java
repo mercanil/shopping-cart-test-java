@@ -7,9 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for CartService business logic.
- */
 class CartServiceTest {
 
     private CartService cartService;
