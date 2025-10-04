@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest
 class ProductPricingServiceTest {
 
@@ -53,10 +52,26 @@ class ProductPricingServiceTest {
     }
 
     @Test
+    void testFetchNullProductNameReturnsFailure() {
+        Try<Product> result = service.fetchProduct(null);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getCause() instanceof ProductFetchException);
+    }
+
+    @Test
+    void testFetchBlankProductNameReturnsFailure() {
+        Try<Product> result = service.fetchProduct("   ");
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getCause() instanceof ProductFetchException);
+    }
+
+    @Test
     void testMonadicComposition() {
         Try<Double> totalPrice = service.fetchProduct("cornflakes")
                 .map(product -> product.price() * 2)
-                .map(subtotal -> subtotal * 1.125); // with tax
+                .map(subtotal -> subtotal * 1.125);
 
         assertTrue(totalPrice.isSuccess());
         assertEquals(5.67, totalPrice.get(), 0.01);
