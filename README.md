@@ -1,3 +1,21 @@
+## Solution Implementation
+
+### Design Decisions
+- Used Vavr's Try monad for error handling in HTTP calls
+- Implemented immutable data structures using Java records
+- Applied functional programming principles throughout
+- Used Spring's component scanning for dependency injection
+
+### Running the Application
+```bash
+./gradlew test
+````
+### Assumptions
+- Product names in URLs are case-insensitive
+- Network timeouts are acceptable failures
+- Tax rate is configurable per deployment environment
+
+
 ## Instructions for the assignment
 ### If cloning the repo
 1. Clone this repository on your machine.
