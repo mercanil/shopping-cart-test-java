@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Locale;
 
 @Service
 public class ProductPricingService {
@@ -24,7 +25,7 @@ public class ProductPricingService {
 
     public Try<Product> fetchProduct(String productName) {
         return Try.of(() -> {
-            String url = baseUrl + productName.toLowerCase() + ".json";
+            String url = baseUrl + productName.toLowerCase(Locale.ROOT) + ".json";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
