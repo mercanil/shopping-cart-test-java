@@ -1,6 +1,6 @@
 package com.siriusxm.example.cart.service;
 
-import com.siriusxm.example.cart.config.CartConfiguration;
+import com.siriusxm.example.cart.exception.ProductFetchException;
 import com.siriusxm.example.cart.model.Product;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest(classes = CartConfiguration.class)
+@SpringBootTest
 class ProductPricingServiceTest {
 
     @Autowired
@@ -48,7 +48,7 @@ class ProductPricingServiceTest {
 
     @Test
     void testGetProductThrowsExceptionOnFailure() {
-        assertThrows(RuntimeException.class,
+        assertThrows(ProductFetchException.class,
                 () -> service.getProduct("nonexistent"));
     }
 

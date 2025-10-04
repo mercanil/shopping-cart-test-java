@@ -2,8 +2,11 @@ package com.siriusxm.example.cart.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.siriusxm.example.cart.exception.ProductFetchException;
 import com.siriusxm.example.cart.model.Product;
 import io.vavr.control.Try;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -15,13 +18,12 @@ import java.util.Locale;
 @Service
 public class ProductPricingService {
 
-    private final HttpClient httpClient;
-    private final String baseUrl;
+    @Autowired
+    private  HttpClient httpClient;
 
-    public ProductPricingService(HttpClient httpClient, String baseUrl) {
-        this.httpClient = httpClient;
-        this.baseUrl = baseUrl;
-    }
+    @Value("${cart.pricing.base-url}")
+    private String baseUrl;
+
 
     public Try<Product> fetchProduct(String productName) {
         return Try.of(() -> {
@@ -38,7 +40,7 @@ public class ProductPricingService {
             );
 
             if (response.statusCode() != 200) {
-                throw new RuntimeException(
+                throw new ProductFetchException(
                         "Failed to fetch product: " + productName +
                                 ", status: " + response.statusCode() +
                                 ", url: " + url
@@ -51,7 +53,7 @@ public class ProductPricingService {
 
     public Product getProduct(String productName) {
         return fetchProduct(productName)
-                .getOrElseThrow(ex -> new RuntimeException(
+                .getOrElseThrow(ex -> new ProductFetchException(
                         "Failed to fetch product: " + productName, ex
                 ));
     }
