@@ -40,7 +40,8 @@ public class ProductPricingService {
             if (response.statusCode() != 200) {
                 throw new RuntimeException(
                         "Failed to fetch product: " + productName +
-                                ", status: " + response.statusCode()
+                                ", status: " + response.statusCode() +
+                                ", url: " + url
                 );
             }
 
