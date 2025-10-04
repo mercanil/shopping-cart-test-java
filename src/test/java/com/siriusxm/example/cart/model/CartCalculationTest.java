@@ -86,7 +86,7 @@ class CartCalculationTest {
         Product product = new Product("Test", 2.50);
         CartItem item = new CartItem(product, 4);
 
-        assertEquals(10.00, cartService.calculateLineTotal(item), 0.01);
+        assertEquals(10.00, cartService.calculateItemTotal(item), 0.01);
     }
 
     @Test
@@ -94,7 +94,7 @@ class CartCalculationTest {
         Product product = new Product("Test", 3.33);
         CartItem item = new CartItem(product, 3);
 
-        assertEquals(9.99, cartService.calculateLineTotal(item), 0.01);
+        assertEquals(9.99, cartService.calculateItemTotal(item), 0.01);
     }
 
     @Test

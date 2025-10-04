@@ -33,27 +33,22 @@ public class CartService {
         return new Cart(newItems);
     }
 
-    public double calculateLineTotal(CartItem item) {
+    public double calculateItemTotal(CartItem item) {
         return item.product().price() * item.quantity();
     }
 
     public double calculateSubtotal(Cart cart) {
         return cart.getItems().stream()
-                .mapToDouble(this::calculateLineTotal)
+                .mapToDouble(this::calculateItemTotal)
                 .sum();
     }
 
     public CartTotals calculateTotals(Cart cart) {
         double subtotal = calculateSubtotal(cart);
 
-        BigDecimal subtotalBd = BigDecimal.valueOf(subtotal)
-                .setScale(2, RoundingMode.CEILING);
-
-        BigDecimal taxBd = subtotalBd.multiply(BigDecimal.valueOf(taxRate))
-                .setScale(2, RoundingMode.CEILING);
-
-        BigDecimal totalBd = subtotalBd.add(taxBd)
-                .setScale(2, RoundingMode.CEILING);
+        BigDecimal subtotalBd = roundUp(subtotal);
+        BigDecimal taxBd = roundUp(subtotalBd.doubleValue() * taxRate);
+        BigDecimal totalBd = roundUp(subtotalBd.add(taxBd).doubleValue());
 
         return new CartTotals(
                 subtotalBd.doubleValue(),
@@ -62,11 +57,13 @@ public class CartService {
         );
     }
 
+    private BigDecimal roundUp(double value) {
+        return BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING);
+    }
+
     public double calculateTax(double subtotal) {
-        return BigDecimal.valueOf(subtotal)
-                .multiply(BigDecimal.valueOf(taxRate))
-                .setScale(2, RoundingMode.CEILING)
-                .doubleValue();
+        return roundUp(subtotal * taxRate).doubleValue();
+
     }
 
     public double getTaxRate() {

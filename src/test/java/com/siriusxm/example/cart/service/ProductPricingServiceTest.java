@@ -27,43 +27,6 @@ class ProductPricingServiceTest {
     }
 
     @Test
-    void testFetchWeetabix() {
-        Try<Product> result = service.fetchProduct("weetabix");
-
-        assertTrue(result.isSuccess());
-        Product product = result.get();
-        assertEquals("Weetabix", product.name());
-        assertEquals(9.98, product.price(), 0.01);
-    }
-
-    @Test
-    void testFetchCheerios() {
-        Try<Product> result = service.fetchProduct("cheerios");
-
-        assertTrue(result.isSuccess());
-        assertNotNull(result.get());
-        assertTrue(result.get().price() > 0);
-    }
-
-    @Test
-    void testFetchFrosties() {
-        Try<Product> result = service.fetchProduct("frosties");
-
-        assertTrue(result.isSuccess());
-        assertNotNull(result.get());
-        assertTrue(result.get().price() > 0);
-    }
-
-    @Test
-    void testFetchShreddies() {
-        Try<Product> result = service.fetchProduct("shreddies");
-
-        assertTrue(result.isSuccess());
-        assertNotNull(result.get());
-        assertTrue(result.get().price() > 0);
-    }
-
-    @Test
     void testFetchAllProducts() {
         String[] products = {"cheerios", "cornflakes", "frosties", "shreddies", "weetabix"};
 

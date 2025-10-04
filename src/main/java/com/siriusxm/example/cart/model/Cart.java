@@ -1,22 +1,15 @@
 package com.siriusxm.example.cart.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Cart {
-    private final List<CartItem> items;
+public record Cart(List<CartItem> items) {
 
     public Cart() {
-        this.items = new ArrayList<>();
+        this(List.of());
     }
 
-    public Cart(List<CartItem> items) {
-        this.items = new ArrayList<>(items);
-    }
-
-    public List<CartItem> getItems() {
-        return Collections.unmodifiableList(items);
+    public Cart {
+        items = List.copyOf(items); // defensive copy, creates unmodifiable list
     }
 
     public boolean isEmpty() {
@@ -25,5 +18,9 @@ public class Cart {
 
     public int getItemCount() {
         return items.size();
+    }
+
+    public List<CartItem> getItems() {
+        return items; // already unmodifiable from constructor
     }
 }
