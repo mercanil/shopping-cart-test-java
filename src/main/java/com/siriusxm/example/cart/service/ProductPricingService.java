@@ -36,12 +36,10 @@ public class ProductPricingService {
         if (baseUrl == null || baseUrl.isBlank()) {
             throw new IllegalArgumentException("Base URL cannot be null or blank");
         }
-        if (!baseUrl.endsWith("/")) {
-            throw new IllegalArgumentException("Base URL must end with /");
-        }
+
         this.httpClient = httpClient;
-        this.baseUrl = baseUrl;
-        log.info("ProductPricingService initialized with base URL: {}", baseUrl);
+        this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+        log.info("ProductPricingService initialized with base URL: {}", this.baseUrl);
     }
 
     public Try<Product> fetchProduct(String productName) {
@@ -82,16 +80,6 @@ public class ProductPricingService {
                 log.error("Unexpected error fetching product: {}", productName, ex);
             }
         });
-    }
-
-    public Product getProduct(String productName) {
-        return fetchProduct(productName)
-                .getOrElseThrow(ex -> {
-                    if (ex instanceof ProductFetchException) {
-                        throw (ProductFetchException) ex;
-                    }
-                    return new ProductFetchException("Failed to fetch product: " + productName, ex);
-                });
     }
 
     private Product parseProduct(String jsonResponse) {

@@ -46,12 +46,6 @@ class ProductPricingServiceTest {
     }
 
     @Test
-    void testGetProductThrowsExceptionOnFailure() {
-        assertThrows(ProductFetchException.class,
-                () -> service.getProduct("nonexistent"));
-    }
-
-    @Test
     void testFetchNullProductNameReturnsFailure() {
         Try<Product> result = service.fetchProduct(null);
 
@@ -128,17 +122,9 @@ class ProductPricingServiceTest {
     }
 
     @Test
-    void testGetProductSuccess() {
-        Product product = service.getProduct("cornflakes");
-
-        assertNotNull(product);
-        assertEquals("Corn Flakes", product.name());
-        assertEquals(2.52, product.price(), 0.01);
-    }
-
-    @Test
     void testProductImmutability() {
-        Product product = service.getProduct("cheerios");
+        Product product = service.fetchProduct("cheerios")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch", ex));
         String originalName = product.name();
         double originalPrice = product.price();
 

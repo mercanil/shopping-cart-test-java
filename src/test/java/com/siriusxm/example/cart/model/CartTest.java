@@ -20,8 +20,10 @@ class CartTest {
 
     @Test
     void testSampleCalculationFromRequirements() {
-        Product cornflakes = pricingService.getProduct("cornflakes");
-        Product weetabix = pricingService.getProduct("weetabix");
+        Product cornflakes = pricingService.fetchProduct("cornflakes")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cornflakes", ex));
+        Product weetabix = pricingService.fetchProduct("weetabix")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch weetabix", ex));
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cornflakes, 2));
@@ -45,8 +47,10 @@ class CartTest {
 
     @Test
     void testAddMultipleProducts() {
-        Product cheerios = pricingService.getProduct("cheerios");
-        Product frosties = pricingService.getProduct("frosties");
+        Product cheerios = pricingService.fetchProduct("cheerios")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cheerios", ex));
+        Product frosties = pricingService.fetchProduct("frosties")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch frosties", ex));
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cheerios, 1));
@@ -59,7 +63,8 @@ class CartTest {
     @Test
     void testCartImmutability() {
         Cart originalCart = new Cart();
-        Product shreddies = pricingService.getProduct("shreddies");
+        Product shreddies = pricingService.fetchProduct("shreddies")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch shreddies", ex));
 
         Cart newCart = cartService.addItem(originalCart, new CartItem(shreddies, 1));
 
@@ -72,7 +77,8 @@ class CartTest {
 
     @Test
     void testMultipleQuantities() {
-        Product cheerios = pricingService.getProduct("cheerios");
+        Product cheerios = pricingService.fetchProduct("cheerios")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cheerios", ex));
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cheerios, 5));
@@ -90,7 +96,8 @@ class CartTest {
 
     @Test
     void testAddItemToNullCartThrowsException() {
-        Product product = pricingService.getProduct("cornflakes");
+        Product product = pricingService.fetchProduct("cornflakes")
+                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cornflakes", ex));
         assertThrows(IllegalArgumentException.class,
                 () -> cartService.addItem(null, new CartItem(product, 1)));
     }
