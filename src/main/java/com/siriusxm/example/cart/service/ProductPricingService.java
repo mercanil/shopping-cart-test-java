@@ -21,6 +21,8 @@ public class ProductPricingService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductPricingService.class);
     private static final String JSON_EXTENSION = ".json";
+    public static final String TITLE = "title";
+    public static final String PRICE = "price";
 
     private final HttpClient httpClient;
     private final String baseUrl;
@@ -101,8 +103,8 @@ public class ProductPricingService {
             JsonObject jsonObject = JsonParser.parseString(jsonResponse)
                     .getAsJsonObject();
 
-            String title = jsonObject.get("title").getAsString();
-            double price = jsonObject.get("price").getAsDouble();
+            String title = jsonObject.get(TITLE).getAsString();
+            double price = jsonObject.get(PRICE).getAsDouble();
 
             return new Product(title, price);
         } catch (Exception e) {
