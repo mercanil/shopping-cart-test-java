@@ -20,11 +20,19 @@ public class CartService {
 
     private final BigDecimal taxRate;
 
-    public CartService(@Value("${cart.tax.rate}") double taxRate) {
-        if (taxRate < 0 || taxRate > 1) {
+    public CartService(@Value("${cart.tax.rate}") String taxRateStr) {
+        BigDecimal rate;
+        try {
+            rate = new BigDecimal(taxRateStr);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Tax rate must be a valid number", e);
+        }
+
+        if (rate.compareTo(BigDecimal.ZERO) < 0 || rate.compareTo(BigDecimal.ONE) > 0) {
             throw new IllegalArgumentException("Tax rate must be between 0 and 1");
         }
-        this.taxRate = BigDecimal.valueOf(taxRate);
+
+        this.taxRate = rate;
         log.info("CartService initialized with tax rate: {}", taxRate);
     }
 

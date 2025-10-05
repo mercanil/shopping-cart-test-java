@@ -12,7 +12,7 @@ class CartCalculationTest {
 
     @BeforeEach
     void setUp() {
-        cartService = new CartService(0.125); // 12.5% tax rate
+        cartService = new CartService("0.125");
     }
 
     @Test
