@@ -18,13 +18,13 @@ public class CartService {
 
     private static final Logger log = LoggerFactory.getLogger(CartService.class);
 
-    private final double taxRate;
+    private final BigDecimal taxRate;
 
     public CartService(@Value("${cart.tax.rate}") double taxRate) {
         if (taxRate < 0 || taxRate > 1) {
             throw new IllegalArgumentException("Tax rate must be between 0 and 1");
         }
-        this.taxRate = taxRate;
+        this.taxRate = BigDecimal.valueOf(taxRate);
         log.info("CartService initialized with tax rate: {}", taxRate);
     }
 
@@ -69,9 +69,14 @@ public class CartService {
 
         double subtotal = calculateSubtotal(cart);
 
-        BigDecimal subtotalBd = roundUp(subtotal);
-        BigDecimal taxBd = roundUp(subtotalBd.doubleValue() * taxRate);
-        BigDecimal totalBd = roundUp(subtotalBd.add(taxBd).doubleValue());
+        BigDecimal subtotalBd = BigDecimal.valueOf(subtotal)
+                .setScale(2, RoundingMode.CEILING);
+
+        BigDecimal taxBd = subtotalBd.multiply(taxRate)
+                .setScale(2, RoundingMode.CEILING);
+
+        BigDecimal totalBd = subtotalBd.add(taxBd)
+                .setScale(2, RoundingMode.CEILING);
 
         CartTotals totals = new CartTotals(
                 subtotalBd.doubleValue(),
@@ -89,14 +94,13 @@ public class CartService {
         if (subtotal < 0) {
             throw new IllegalArgumentException("Subtotal cannot be negative");
         }
-        return roundUp(subtotal * taxRate).doubleValue();
+        return BigDecimal.valueOf(subtotal)
+                .multiply(taxRate)
+                .setScale(2, RoundingMode.CEILING)
+                .doubleValue();
     }
 
     public double getTaxRate() {
-        return taxRate;
-    }
-
-    private BigDecimal roundUp(double value) {
-        return BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING);
+        return taxRate.doubleValue();
     }
 }
