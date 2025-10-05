@@ -3,6 +3,7 @@ package com.siriusxm.example.cart.service;
 import com.siriusxm.example.cart.exception.ProductFetchException;
 import com.siriusxm.example.cart.model.Product;
 import io.vavr.control.Try;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Tag("integration")
 class ProductPricingServiceTest {
 
     @Autowired
@@ -50,7 +52,7 @@ class ProductPricingServiceTest {
         Try<Product> result = service.fetchProduct(null);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getCause() instanceof ProductFetchException);
+        assertInstanceOf(ProductFetchException.class, result.getCause());
     }
 
     @Test
@@ -58,7 +60,7 @@ class ProductPricingServiceTest {
         Try<Product> result = service.fetchProduct("   ");
 
         assertTrue(result.isFailure());
-        assertTrue(result.getCause() instanceof ProductFetchException);
+        assertInstanceOf(ProductFetchException.class, result.getCause());
     }
 
     @Test

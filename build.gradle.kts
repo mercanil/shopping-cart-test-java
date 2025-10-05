@@ -28,23 +28,30 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
-
     implementation("com.google.code.gson:gson:2.10.1")
-
     implementation("io.vavr:vavr:0.10.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.mockito:mockito-core:5.12.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
 }
-
-tasks.test {
-    useJUnitPlatform()
-}
-
 
 tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 
     reports {
         xml.required.set(true)
+    }
+}
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("integration")
+    }
+}
+
+tasks.register<Test>("integrationTest") {
+    useJUnitPlatform {
+        includeTags("integration")
     }
 }

@@ -1,29 +1,24 @@
 package com.siriusxm.example.cart.model;
 
-import com.siriusxm.example.cart.config.CartConfiguration;
 import com.siriusxm.example.cart.service.CartService;
-import com.siriusxm.example.cart.service.ProductPricingService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class CartTest {
 
-    @Autowired
-    private ProductPricingService pricingService;
-
-    @Autowired
     private CartService cartService;
+
+    @BeforeEach
+    void setUp() {
+        cartService = new CartService(0.125); // 12.5% tax rate
+    }
 
     @Test
     void testSampleCalculationFromRequirements() {
-        Product cornflakes = pricingService.fetchProduct("cornflakes")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cornflakes", ex));
-        Product weetabix = pricingService.fetchProduct("weetabix")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch weetabix", ex));
+        Product cornflakes = new Product("Corn Flakes", 2.52);
+        Product weetabix = new Product("Weetabix", 9.98);
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cornflakes, 2));
@@ -47,10 +42,8 @@ class CartTest {
 
     @Test
     void testAddMultipleProducts() {
-        Product cheerios = pricingService.fetchProduct("cheerios")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cheerios", ex));
-        Product frosties = pricingService.fetchProduct("frosties")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch frosties", ex));
+        Product cheerios = new Product("Cheerios", 8.43);
+        Product frosties = new Product("Frosties", 4.99);
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cheerios, 1));
@@ -63,8 +56,7 @@ class CartTest {
     @Test
     void testCartImmutability() {
         Cart originalCart = new Cart();
-        Product shreddies = pricingService.fetchProduct("shreddies")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch shreddies", ex));
+        Product shreddies = new Product("Shreddies", 3.0);
 
         Cart newCart = cartService.addItem(originalCart, new CartItem(shreddies, 1));
 
@@ -77,8 +69,7 @@ class CartTest {
 
     @Test
     void testMultipleQuantities() {
-        Product cheerios = pricingService.fetchProduct("cheerios")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cheerios", ex));
+        Product cheerios = new Product("Cheerios", 8.43);
 
         Cart cart = new Cart();
         cart = cartService.addItem(cart, new CartItem(cheerios, 5));
@@ -96,9 +87,20 @@ class CartTest {
 
     @Test
     void testAddItemToNullCartThrowsException() {
-        Product product = pricingService.fetchProduct("cornflakes")
-                .getOrElseThrow(ex -> new RuntimeException("Failed to fetch cornflakes", ex));
+        Product product = new Product("Test", 10.0);
         assertThrows(IllegalArgumentException.class,
                 () -> cartService.addItem(null, new CartItem(product, 1)));
+    }
+
+    @Test
+    void testCalculateSubtotalWithNullCartThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> cartService.calculateSubtotal(null));
+    }
+
+    @Test
+    void testCalculateTotalsWithNullCartThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> cartService.calculateTotals(null));
     }
 }
